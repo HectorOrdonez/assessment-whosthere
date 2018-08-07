@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Console\Commands;
+namespace WhosThere\ReachCalculator\Command;
 
 use Illuminate\Console\Command;
 use WhosThere\TwitterClient\TwitterClientInterface;
 
-class ReachCalculator extends Command
+class ReachCalculatorCommand extends Command
 {
     /**
      * The name and signature of the console command.
