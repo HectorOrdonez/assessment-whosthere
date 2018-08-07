@@ -2,6 +2,8 @@
 
 namespace WhosThere\Twitter;
 
+use WhosThere\Twitter\Entity\RetweetCollection;
+
 /**
  * Interface RetweetRepositoryInterface
  *
@@ -11,4 +13,9 @@ namespace WhosThere\Twitter;
  */
 interface RetweetRepositoryInterface
 {
+    /**
+     * @param int $statusId
+     * @return RetweetCollection
+     */
+    public function findAllByStatusId($statusId);
 }

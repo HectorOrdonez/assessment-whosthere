@@ -52,8 +52,7 @@ class ReachCalculatorServiceTest extends FeatureTestCase
         // Arrange
         $statusId = rand(1, 1000000000000);
         $url = $this->faker()->url . '/' . $statusId;
-        $retweet = new Retweet();
-        $retweet->setUserId(rand(1, 10000));
+        $retweet = new Retweet(['user_id' => rand(1, 100000)]);
 
         $retweetRepo = $this->getMockedRetweetRepo();
         $retweetRepo->shouldReceive('findAllByStatusId')->andReturn(new RetweetCollection([$retweet]));
@@ -80,9 +79,7 @@ class ReachCalculatorServiceTest extends FeatureTestCase
         // Arrange
         $url = $this->faker()->url;
 
-        $retweet = new Retweet();
-        $retweet->setUserId(rand(1, 10000));
-
+        $retweet = new Retweet(['user_id' => rand(1, 100000)]);
         $retweetRepo = $this->getMockedRetweetRepo();
         $retweetRepo->shouldReceive('findAllByStatusId')->andReturn(new RetweetCollection([$retweet]));
 
@@ -98,7 +95,6 @@ class ReachCalculatorServiceTest extends FeatureTestCase
         $result = $service->calculate($url);
 
         // Assert
-//        $client->shouldHaveReceived('placeholder')->with($url);
         $this->assertEquals(3, $result);
     }
 

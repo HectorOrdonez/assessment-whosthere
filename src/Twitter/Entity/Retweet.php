@@ -6,19 +6,15 @@ class Retweet
 {
     private $userId;
 
-    /**
-     * @return int
-     */
+    public function __construct(array $params = [])
+    {
+        if (isset($params['user_id'])) {
+            $this->userId = $params['user_id'];
+        }
+    }
+
     public function getUserId()
     {
         return $this->userId;
-    }
-
-    /**
-     * @param int $userId
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
     }
 }

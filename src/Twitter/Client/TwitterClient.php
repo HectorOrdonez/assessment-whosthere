@@ -15,6 +15,17 @@ class TwitterClient implements TwitterClientInterface
 {
     public function placeholder($string)
     {
-        return 1123;
+        // TODO: Implement placeholder() method.
     }
+
+    public function getFollowersList($userId)
+    {
+        // TODO: Implement getFollowersList() method.
+    }
+
+    public function getRetweetsList($statusId)
+    {
+        // TODO: Implement getRetweetsList() method.
+    }
+
 }

@@ -57,7 +57,7 @@ class FollowerRepositoryTest extends FeatureTestCase
 
         // Assert
         $this->assertInstanceOf(FollowerCollection::class, $result);
-        $this->assertEquals(1, count($result));
+        $this->assertCount(1, $result);
     }
 
     /**
@@ -82,6 +82,6 @@ class FollowerRepositoryTest extends FeatureTestCase
 
         // Assert
         $this->assertInstanceOf(FollowerCollection::class, $result);
-        $this->assertEquals(4, count($result));
+        $this->assertCount(4, $result);
     }
 }

@@ -26,8 +26,7 @@ class FollowerRepository implements FollowerRepositoryInterface
 
         foreach($list as $record)
         {
-            $follower = new Follower();
-            $follower->setId($record['id']);
+            $follower = new Follower($record);
 
             $followerCollection[] = $follower;
         }

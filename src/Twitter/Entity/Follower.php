@@ -6,19 +6,11 @@ class Follower
 {
     private $id;
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function __construct(array $params = [])
     {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
+        if(isset($params['id']))
+        {
+            $this->id = $params['id'];
+        }
     }
 }
