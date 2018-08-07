@@ -1,6 +1,6 @@
 <?php
 
-namespace WhosThere\TwitterClient;
+namespace WhosThere\Twitter;
 
 use Illuminate\Support\ServiceProvider;
 use WhosThere\ReachCalculator\Service\ReachCalculator;

@@ -1,6 +1,6 @@
 <?php
 
-namespace WhosThere\TwitterClient;
+namespace WhosThere\Twitter;
 
 interface TwitterClientInterface
 {

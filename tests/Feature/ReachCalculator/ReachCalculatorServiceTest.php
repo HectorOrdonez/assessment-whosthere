@@ -2,9 +2,14 @@
 
 namespace Tests\Feature;
 
+use WhosThere\Twitter\Entity\Follower;
+use WhosThere\Twitter\Entity\FollowerCollection;
+use WhosThere\Twitter\Entity\Retweet;
+use WhosThere\Twitter\Entity\RetweetCollection;
+use WhosThere\Twitter\RetweetRepositoryInterface;
+use WhosThere\Twitter\FollowerRepositoryInterface;
 use WhosThere\ReachCalculator\Service\ReachCalculator;
 use WhosThere\ReachCalculator\ReachCalculatorServiceInterface;
-use WhosThere\TwitterClient\TwitterClientInterface;
 
 class ReachCalculatorServiceTest extends FeatureTestCase
 {
@@ -13,7 +18,7 @@ class ReachCalculatorServiceTest extends FeatureTestCase
      */
     public function it_instantiates()
     {
-        $service = new ReachCalculator($this->getMockedClient());
+        $service = new ReachCalculator($this->getMockedRetweetRepo(), $this->getMockedFollowerRepo());
 
         $this->assertInstanceOf(ReachCalculatorServiceInterface::class, $service);
     }
@@ -24,16 +29,18 @@ class ReachCalculatorServiceTest extends FeatureTestCase
     public function it_returns_0_when_no_retweets()
     {
         // Arrange
-        $client = $this->getMockedClient();
-        $client->shouldReceive('placeholder')->andReturn([]);
-        $url = $this->faker()->url;
-        $service = new ReachCalculator($client);
+        $statusId = rand(1, 1000000000000);
+        $url = $this->faker()->url . '/' . $statusId;
+
+        $retweetRepo = $this->getMockedRetweetRepo();
+        $retweetRepo->shouldReceive('findAllByStatusId')->andReturn(new RetweetCollection());
+        $service = new ReachCalculator($retweetRepo, $this->getMockedFollowerRepo());
 
         // Act
         $result = $service->calculate($url);
 
         // Assert
-        $client->shouldHaveReceived('placeholder')->with($url);
+        $retweetRepo->shouldHaveReceived('findAllByStatusId')->with($statusId);
         $this->assertEquals(0, $result);
     }
 
@@ -43,17 +50,24 @@ class ReachCalculatorServiceTest extends FeatureTestCase
     public function it_returns_1_when_1_retweeter_without_followers()
     {
         // Arrange
-        $client = $this->getMockedClient();
-        $client->shouldReceive('placeholder')->andReturn(['something']);
+        $statusId = rand(1, 1000000000000);
+        $url = $this->faker()->url . '/' . $statusId;
+        $retweet = new Retweet();
+        $retweet->setUserId(rand(1, 10000));
 
-        $url = $this->faker()->url;
-        $service = new ReachCalculator($client);
+        $retweetRepo = $this->getMockedRetweetRepo();
+        $retweetRepo->shouldReceive('findAllByStatusId')->andReturn(new RetweetCollection([$retweet]));
+
+        $followerRepo = $this->getMockedFollowerRepo();
+        $followerRepo->shouldReceive('findAllByUserId')->andReturn(new FollowerCollection());
+
+        $service = new ReachCalculator($retweetRepo, $followerRepo);
 
         // Act
         $result = $service->calculate($url);
 
         // Assert
-        $client->shouldHaveReceived('placeholder')->with($url);
+        $retweetRepo->shouldHaveReceived('findAllByStatusId')->with($statusId);
         $this->assertEquals(1, $result);
     }
 
@@ -64,25 +78,37 @@ class ReachCalculatorServiceTest extends FeatureTestCase
     public function it_returns_3_when_1_retweeter_with_2_followers()
     {
         // Arrange
-        $client = $this->getMockedClient();
-        $client->shouldReceive('placeholder')->andReturn(['something']);
-
         $url = $this->faker()->url;
-        $service = new ReachCalculator($client);
+
+        $retweet = new Retweet();
+        $retweet->setUserId(rand(1, 10000));
+
+        $retweetRepo = $this->getMockedRetweetRepo();
+        $retweetRepo->shouldReceive('findAllByStatusId')->andReturn(new RetweetCollection([$retweet]));
+
+        $followerRepo = $this->getMockedFollowerRepo();
+        $followerRepo->shouldReceive('findAllByUserId')->andReturn(new FollowerCollection([
+            new Follower(),
+            new Follower(),
+        ]));
+
+        $service = new ReachCalculator($retweetRepo, $followerRepo);
 
         // Act
         $result = $service->calculate($url);
 
         // Assert
-        $client->shouldHaveReceived('placeholder')->with($url);
+//        $client->shouldHaveReceived('placeholder')->with($url);
         $this->assertEquals(3, $result);
     }
 
-    /**
-     * @return \Mockery\MockInterface|TwitterClientInterface
-     */
-    private function getMockedClient()
+    private function getMockedFollowerRepo()
     {
-        return \Mockery::mock(TwitterClientInterface::class);
+        return \Mockery::mock(FollowerRepositoryInterface::class);
+    }
+
+    private function getMockedRetweetRepo()
+    {
+        return \Mockery::mock(RetweetRepositoryInterface::class);
     }
 }

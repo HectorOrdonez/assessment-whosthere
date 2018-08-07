@@ -4,7 +4,7 @@ namespace Tests\Acceptance\ReachCalculator;
 
 use Tests\Acceptance\AcceptanceTestCase;
 use Tests\Support\Fake\FakeTwitterClient;
-use WhosThere\TwitterClient\TwitterClientInterface;
+use WhosThere\Twitter\TwitterClientInterface;
 
 class BasicTest extends AcceptanceTestCase
 {

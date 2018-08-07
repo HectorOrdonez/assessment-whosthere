@@ -2,7 +2,7 @@
 
 namespace Tests\Support\Fake;
 
-use WhosThere\TwitterClient\TwitterClientInterface;
+use WhosThere\Twitter\TwitterClientInterface;
 
 class FakeTwitterClient  implements TwitterClientInterface
 {

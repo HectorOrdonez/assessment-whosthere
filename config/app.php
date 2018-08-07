@@ -177,7 +177,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        \WhosThere\TwitterClient\TwitterClientServiceProvider::class,
+        \WhosThere\Twitter\TwitterServiceProvider::class,
 
     ],
 

@@ -3,7 +3,7 @@
 namespace WhosThere\ReachCalculator\Command;
 
 use Illuminate\Console\Command;
-use WhosThere\TwitterClient\TwitterClientInterface;
+use WhosThere\Twitter\TwitterClientInterface;
 
 class ReachCalculatorCommand extends Command
 {

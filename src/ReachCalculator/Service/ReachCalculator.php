@@ -2,23 +2,35 @@
 
 namespace WhosThere\ReachCalculator\Service;
 
+use WhosThere\Twitter\Entity\RetweetCollection;
+use WhosThere\Twitter\Entity\FollowerCollection;
+use WhosThere\Twitter\RetweetRepositoryInterface;
+use WhosThere\Twitter\FollowerRepositoryInterface;
 use WhosThere\ReachCalculator\ReachCalculatorServiceInterface;
-use WhosThere\TwitterClient\TwitterClientInterface;
 
 class ReachCalculator implements ReachCalculatorServiceInterface
 {
     /**
-     * @var TwitterClientInterface
+     * @var RetweetRepositoryInterface
      */
-    private $client;
+    private $retweetRepository;
+
+    /**
+     * @var FollowerRepositoryInterface
+     */
+    private $followerRepository;
 
     /**
      * ReachCalculator constructor.
-     * @param TwitterClientInterface $client
+     * @param RetweetRepositoryInterface $retweetRepository
+     * @param FollowerRepositoryInterface $followerRepository
      */
-    public function __construct(TwitterClientInterface $client)
-    {
-        $this->client = $client;
+    public function __construct(
+        RetweetRepositoryInterface $retweetRepository,
+        FollowerRepositoryInterface $followerRepository
+    ) {
+        $this->retweetRepository = $retweetRepository;
+        $this->followerRepository = $followerRepository;
     }
 
     /**
@@ -26,7 +38,9 @@ class ReachCalculator implements ReachCalculatorServiceInterface
      */
     public function calculate($url)
     {
-        $retweeters = $this->getRetweeters($url);
+        $statusId = $this->getStatusIdFromUrl($url);
+
+        $retweeters = $this->getRetweeters($statusId);
 
         $followers = $this->getFollowers($retweeters);
 
@@ -34,16 +48,37 @@ class ReachCalculator implements ReachCalculatorServiceInterface
     }
 
     /**
-     * @param $url
-     * @return array
+     * @param int $statusId
+     * @return RetweetCollection
      */
-    private function getRetweeters($url)
+    private function getRetweeters($statusId)
     {
-        return $this->client->placeholder($url);
+        return $this->retweetRepository->findAllByStatusId($statusId);
     }
 
-    private function getFollowers(array $retweeters)
+    private function getFollowers(RetweetCollection $retweeters)
     {
-        return [];
+        $followers = new FollowerCollection();
+
+        foreach($retweeters as $retweet)
+        {
+            // @todo check if the followers are repeating
+            $newFollowers = $this->followerRepository->findAllByUserId($retweet->getUserId());
+            $followers = $followers->merge($newFollowers);
+        }
+
+        return $followers;
+    }
+
+    /**
+     * A tweet url can be split to get access to its status id
+     * @param string $url
+     * @return string
+     */
+    private function getStatusIdFromUrl($url)
+    {
+        $exploded = explode('/', $url);
+
+        return end($exploded);
     }
 }
