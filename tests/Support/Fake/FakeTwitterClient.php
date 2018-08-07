@@ -9,6 +9,6 @@ class FakeTwitterClient  implements TwitterClientInterface
 
     public function placeholder($string)
     {
-        return 10;
+        return [];
     }
 }

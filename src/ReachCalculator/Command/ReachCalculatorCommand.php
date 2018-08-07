@@ -7,6 +7,9 @@ use WhosThere\TwitterClient\TwitterClientInterface;
 
 class ReachCalculatorCommand extends Command
 {
+    const MESSAGE = 'This tweet has reached %d people';
+    const ERROR_INVALID_URL = 'Url is not a valid url';
+
     /**
      * The name and signature of the console command.
      *
@@ -42,9 +45,11 @@ class ReachCalculatorCommand extends Command
 
         if($this->isValidUrl($url))
         {
-            $client->placeholder('test');
+            $reach = $client->placeholder($url);
+
+            $this->info(sprintf(self::MESSAGE, $reach));
         } else {
-            $this->error('Url is not a valid url');
+            $this->error(self::ERROR_INVALID_URL);
         }
     }
 

@@ -38,14 +38,18 @@ class BasicTest extends AcceptanceTestCase
     public function it_reaches_twitter_client()
     {
         // Arrange
+        $url =$this->faker()->url;
         $fakeClient = \Mockery::spy(new FakeTwitterClient());
 
         $this->app->instance(TwitterClientInterface::class, $fakeClient);
 
         // Act
-        $this->artisan('reach:calculate', ['url' => $this->faker()->url]);
+        $this->artisan('reach:calculate', ['url' => $url]);
 
         // Assert
-        $fakeClient->shouldHaveReceived('placeholder');
+        $output = \Artisan::output();
+
+        $fakeClient->shouldHaveReceived('placeholder')->with($url);
+        $this->assertContains('This tweet has reached 0 people', $output);
     }
 }
