@@ -4,8 +4,6 @@ namespace WhosThere\Twitter;
 
 interface TwitterClientInterface
 {
-    public function placeholder($string);
-
     /**
      * Gets a list of followers for given user id
      *

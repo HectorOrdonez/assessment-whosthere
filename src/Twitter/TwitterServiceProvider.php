@@ -23,11 +23,11 @@ class TwitterServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(FollowerRepositoryInterface::class, function () {
-            return new FollowerRepository();
+            return new FollowerRepository($this->app->make(TwitterClientInterface::class));
         });
 
         $this->app->singleton(RetweetRepositoryInterface::class, function () {
-            return new RetweetRepository();
+            return new RetweetRepository($this->app->make(TwitterClientInterface::class));
         });
     }
 }

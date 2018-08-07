@@ -3,6 +3,8 @@
 namespace WhosThere\ReachCalculator\Command;
 
 use Illuminate\Console\Command;
+use WhosThere\ReachCalculator\ReachCalculatorServiceInterface;
+use WhosThere\ReachCalculator\Service\ReachCalculator;
 use WhosThere\Twitter\TwitterClientInterface;
 
 class ReachCalculatorCommand extends Command
@@ -25,27 +27,17 @@ class ReachCalculatorCommand extends Command
     protected $description = 'This is an awesome description you would only read if you actually read this assessment. Thanks for spending time checking my work!';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
-     * @param TwitterClientInterface $client
+     * @param ReachCalculatorServiceInterface $calculator
      */
-    public function handle(TwitterClientInterface $client)
+    public function handle(ReachCalculatorServiceInterface $calculator)
     {
         $url = $this->argument('url');
 
         if($this->isValidUrl($url))
         {
-            $reach = $client->placeholder($url);
+            $reach = $calculator->calculate($url);
 
             $this->info(sprintf(self::MESSAGE, $reach));
         } else {

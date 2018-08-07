@@ -39,7 +39,38 @@ class BasicTest extends AcceptanceTestCase
     {
         // Arrange
         $url =$this->faker()->url;
-        $fakeClient = \Mockery::spy(new FakeTwitterClient());
+
+        $this->app->instance(TwitterClientInterface::class, new FakeTwitterClient());
+
+        // Act
+        $this->artisan('reach:calculate', ['url' => $url]);
+
+        // Assert
+        $output = \Artisan::output();
+
+        $this->assertContains('This tweet has reached 0 people', $output);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_10_when_tweet_is_retweeted_10_times_by_people_without_followers()
+    {
+        // Arrange
+        $url =$this->faker()->url;
+        $fakeClient = new FakeTwitterClient();
+        $fakeClient->retweets = [
+            ['user' => ['id' => rand(1, 10000)]],
+            ['user' => ['id' => rand(1, 10000)]],
+            ['user' => ['id' => rand(1, 10000)]],
+            ['user' => ['id' => rand(1, 10000)]],
+            ['user' => ['id' => rand(1, 10000)]],
+            ['user' => ['id' => rand(1, 10000)]],
+            ['user' => ['id' => rand(1, 10000)]],
+            ['user' => ['id' => rand(1, 10000)]],
+            ['user' => ['id' => rand(1, 10000)]],
+            ['user' => ['id' => rand(1, 10000)]],
+        ];
 
         $this->app->instance(TwitterClientInterface::class, $fakeClient);
 
@@ -49,7 +80,40 @@ class BasicTest extends AcceptanceTestCase
         // Assert
         $output = \Artisan::output();
 
-        $fakeClient->shouldHaveReceived('placeholder')->with($url);
-        $this->assertContains('This tweet has reached 0 people', $output);
+        $this->assertContains('This tweet has reached 10 people', $output);
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_10_when_tweet_is_retweeted_1_time_by_user_with_9_followers()
+    {
+        // Arrange
+        $url =$this->faker()->url;
+        $fakeClient = new FakeTwitterClient();
+        $fakeClient->retweets = [
+            ['user' => ['id' => rand(1, 10000)]],
+        ];
+        $fakeClient->followers = [
+            ['id' => rand(1, 10000000)],
+            ['id' => rand(1, 10000000)],
+            ['id' => rand(1, 10000000)],
+            ['id' => rand(1, 10000000)],
+            ['id' => rand(1, 10000000)],
+            ['id' => rand(1, 10000000)],
+            ['id' => rand(1, 10000000)],
+            ['id' => rand(1, 10000000)],
+            ['id' => rand(1, 10000000)],
+        ];
+
+        $this->app->instance(TwitterClientInterface::class, $fakeClient);
+
+        // Act
+        $this->artisan('reach:calculate', ['url' => $url]);
+
+        // Assert
+        $output = \Artisan::output();
+
+        $this->assertContains('This tweet has reached 10 people', $output);
     }
 }

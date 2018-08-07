@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         \WhosThere\Twitter\TwitterServiceProvider::class,
+        \WhosThere\ReachCalculator\ReachCalculatorServiceProvider::class,
 
     ],
 

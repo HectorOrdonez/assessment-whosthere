@@ -13,11 +13,6 @@ use WhosThere\Twitter\TwitterClientInterface;
  */
 class TwitterClient implements TwitterClientInterface
 {
-    public function placeholder($string)
-    {
-        // TODO: Implement placeholder() method.
-    }
-
     public function getFollowersList($userId)
     {
         // TODO: Implement getFollowersList() method.

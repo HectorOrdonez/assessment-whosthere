@@ -4,21 +4,18 @@ namespace Tests\Support\Fake;
 
 use WhosThere\Twitter\TwitterClientInterface;
 
-class FakeTwitterClient  implements TwitterClientInterface
+class FakeTwitterClient implements TwitterClientInterface
 {
-    public function placeholder($string)
-    {
-        // TODO: Implement placeholder() method.
-    }
+    public $followers = [];
+    public $retweets = [];
 
     public function getFollowersList($userId)
     {
-        // TODO: Implement getFollowersList() method.
+        return $this->followers;
     }
 
     public function getRetweetsList($statusId)
     {
-        // TODO: Implement getRetweetsList() method.
+        return $this->retweets;
     }
-
 }
