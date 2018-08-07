@@ -21,6 +21,20 @@ class BasicTest extends AcceptanceTestCase
     /**
      * @test
      */
+    public function it_prints_error_when_url_is_not_a_url()
+    {
+        // Act
+        $this->artisan('reach:calculate', ['url' => 'hi i am not a url']);
+
+        // Assert
+        $output = \Artisan::output();
+
+        $this->assertContains('Url is not a valid url', $output);
+    }
+
+    /**
+     * @test
+     */
     public function it_reaches_twitter_client()
     {
         // Arrange
@@ -28,7 +42,7 @@ class BasicTest extends AcceptanceTestCase
 
         $this->app->instance(TwitterClientInterface::class, $fakeClient);
 
-            // Act
+        // Act
         $this->artisan('reach:calculate', ['url' => $this->faker()->url]);
 
         // Assert

@@ -34,10 +34,26 @@ class ReachCalculator extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @param TwitterClientInterface $client
      */
     public function handle(TwitterClientInterface $client)
     {
-        $client->placeholder('test');
+        $url = $this->argument('url');
+
+        if($this->isValidUrl($url))
+        {
+            $client->placeholder('test');
+        } else {
+            $this->error('Url is not a valid url');
+        }
+    }
+
+    /**
+     * @param $url
+     * @return mixed
+     */
+    private function isValidUrl($url)
+    {
+        return filter_var($url, FILTER_VALIDATE_URL);
     }
 }
