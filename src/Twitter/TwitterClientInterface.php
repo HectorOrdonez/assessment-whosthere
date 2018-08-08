@@ -20,5 +20,5 @@ interface TwitterClientInterface
      * @param int $statusId
      * @return array
      */
-    public function getRetweetsList($statusId);
+    public function getRetweetersList($statusId);
 }

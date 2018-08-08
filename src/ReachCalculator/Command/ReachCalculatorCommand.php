@@ -5,6 +5,7 @@ namespace WhosThere\ReachCalculator\Command;
 use Illuminate\Console\Command;
 use WhosThere\ReachCalculator\ReachCalculatorServiceInterface;
 use WhosThere\ReachCalculator\Service\ReachCalculator;
+use WhosThere\Twitter\Exception\TwitterClientException;
 use WhosThere\Twitter\TwitterClientInterface;
 
 class ReachCalculatorCommand extends Command
@@ -35,11 +36,8 @@ class ReachCalculatorCommand extends Command
     {
         $url = $this->argument('url');
 
-        if($this->isValidUrl($url))
-        {
-            $reach = $calculator->calculate($url);
-
-            $this->info(sprintf(self::MESSAGE, $reach));
+        if ($this->isValidUrl($url)) {
+            $this->runService($calculator, $url);
         } else {
             $this->error(self::ERROR_INVALID_URL);
         }
@@ -52,5 +50,22 @@ class ReachCalculatorCommand extends Command
     private function isValidUrl($url)
     {
         return filter_var($url, FILTER_VALIDATE_URL);
+    }
+
+    /**
+     * @param ReachCalculatorServiceInterface $calculator
+     * @param \Symfony\Component\Console\Output\OutputInterface $url
+     * @return mixed|void
+     */
+    private function runService(ReachCalculatorServiceInterface $calculator, $url)
+    {
+        try {
+            $reach = $calculator->calculate($url);
+
+            $this->info(sprintf(self::MESSAGE, $reach));
+
+        } catch (TwitterClientException $exception) {
+            $this->error($exception->getMessage());
+        }
     }
 }

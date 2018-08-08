@@ -2,6 +2,8 @@
 
 namespace WhosThere\Twitter\Client;
 
+use Abraham\TwitterOAuth\TwitterOAuth;
+use WhosThere\Twitter\Exception\TwitterClientException;
 use WhosThere\Twitter\TwitterClientInterface;
 
 /**
@@ -11,16 +13,59 @@ use WhosThere\Twitter\TwitterClientInterface;
  *
  * @package WhosThere\Twitter\Client
  */
-class TwitterClient implements TwitterClientInterface
+class TwitterClient extends TwitterOAuth implements TwitterClientInterface
 {
+    /**
+     * @inheritdoc
+     * @throws TwitterClientException
+     */
     public function getFollowersList($userId)
     {
-        // TODO: Implement getFollowersList() method.
+        $response = $this->get('followers/list', [
+            'user_id' => $userId,
+            'skip_status' => true,
+        ]);
+
+        if ($this->hasErrors($response)) {
+            $this->throwException($response);
+        }
+
+        return array_map(function ($user) {
+            return ['id' => $user->id];
+        }, $response->users);
     }
 
-    public function getRetweetsList($statusId)
+    /**
+     * @inheritdoc
+     */
+    public function getRetweetersList($statusId)
     {
-        // TODO: Implement getRetweetsList() method.
+        $response = $this->get('statuses/retweeters/ids', [
+            'id' => $statusId,
+        ]);
+
+        if ($this->hasErrors($response)) {
+            $this->throwException($response);
+        }
+
+        return $response->ids;
     }
 
+    /**
+     * @param $response
+     * @return bool
+     */
+    private function hasErrors($response)
+    {
+        return isset($response->errors);
+    }
+
+    /**
+     * @param $response
+     * @throws TwitterClientException
+     */
+    private function throwException($response)
+    {
+        throw new TwitterClientException($response->errors);
+    }
 }

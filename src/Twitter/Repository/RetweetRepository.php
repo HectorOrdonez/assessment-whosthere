@@ -28,7 +28,7 @@ class RetweetRepository implements RetweetRepositoryInterface
     {
         $retweetCollection = new RetweetCollection();
 
-        $list = $this->client->getRetweetsList($statusId);
+        $list = $this->client->getRetweetersList($statusId);
 
         foreach ($list as $record) {
             $retweet = new Retweet(['user_id' => $record['user']['id']]);

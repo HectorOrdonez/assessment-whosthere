@@ -14,7 +14,7 @@ class FakeTwitterClient implements TwitterClientInterface
         return $this->followers;
     }
 
-    public function getRetweetsList($statusId)
+    public function getRetweetersList($statusId)
     {
         return $this->retweets;
     }

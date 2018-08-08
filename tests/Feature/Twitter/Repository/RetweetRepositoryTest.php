@@ -27,7 +27,7 @@ class RetweetRepositoryTest extends FeatureTestCase
         // Arrange
         $statusId = rand(1, 10000000);
         $mockedClient = \Mockery::mock(TwitterClientInterface::class);
-        $mockedClient->shouldReceive('getRetweetsList')->andReturn([]);
+        $mockedClient->shouldReceive('getRetweetersList')->andReturn([]);
         $retweetRepository = new RetweetRepository($mockedClient);
 
         // Act
@@ -47,7 +47,7 @@ class RetweetRepositoryTest extends FeatureTestCase
         $userId = rand(1, 1000);
         $statusId = rand(1, 10000000);
         $mockedClient = \Mockery::mock(TwitterClientInterface::class);
-        $mockedClient->shouldReceive('getRetweetsList')->andReturn([
+        $mockedClient->shouldReceive('getRetweetersList')->andReturn([
             ['user' => ['id' => $userId]]
         ]);
 
