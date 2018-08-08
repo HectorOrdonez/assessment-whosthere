@@ -26,16 +26,10 @@ class RetweetRepository implements RetweetRepositoryInterface
      */
     public function findAllByStatusId($statusId)
     {
-        $retweetCollection = new RetweetCollection();
-
         $list = $this->client->getRetweetersList($statusId);
 
-        foreach ($list as $record) {
-            $retweet = new Retweet(['user_id' => $record['user']['id']]);
-
-            $retweetCollection[] = $retweet;
-        }
-
-        return $retweetCollection;
+        return new RetweetCollection(array_map(function ($record) {
+            return new Retweet(['user_id' => $record['user']['id']]);
+        }, $list));
     }
 }

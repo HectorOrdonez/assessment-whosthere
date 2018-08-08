@@ -56,13 +56,17 @@ class ReachCalculator implements ReachCalculatorServiceInterface
         return $this->retweetRepository->findAllByStatusId($statusId);
     }
 
+    /**
+     * @todo check if the followers are repeating
+     * @param RetweetCollection $retweeters
+     * @return FollowerCollection
+     */
     private function getFollowers(RetweetCollection $retweeters)
     {
         $followers = new FollowerCollection();
 
         foreach($retweeters as $retweet)
         {
-            // @todo check if the followers are repeating
             $newFollowers = $this->followerRepository->findAllByUserId($retweet->getUserId());
             $followers = $followers->merge($newFollowers);
         }

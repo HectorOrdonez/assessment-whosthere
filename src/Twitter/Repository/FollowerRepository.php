@@ -21,16 +21,10 @@ class FollowerRepository implements FollowerRepositoryInterface
 
     public function findAllByUserId($userId)
     {
-        $followerCollection = new FollowerCollection();
         $list = $this->client->getFollowersList($userId);
 
-        foreach($list as $record)
-        {
-            $follower = new Follower($record);
-
-            $followerCollection[] = $follower;
-        }
-
-        return $followerCollection;
+        return new FollowerCollection(array_map(function ($record) {
+            return new Follower($record);
+        }, $list));
     }
 }
